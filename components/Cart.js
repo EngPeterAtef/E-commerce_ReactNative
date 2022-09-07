@@ -1,23 +1,37 @@
 import { StyleSheet, Text, View, Image, TouchableOpacity, FlatList } from 'react-native'
-import React, { useEffect, useState } from 'react'
+import React, { useContext } from 'react'
 import { Ionicons } from '@expo/vector-icons';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+// import AsyncStorage from '@react-native-async-storage/async-storage';
+import { cartContext,prodContext } from '../config/Contex';
 
 export default function Cart() {
-    const [cart, setCart] = useState([]);
-    function removeFromCart (ind) {
-        
+    const { cart, setCart } = useContext(cartContext);
+    // const{products,setProucts}=useContext(prodContext);
+    //AsyncStorage Code
+    // useEffect(() => {
+    //     getStorage();
+    // }, [cart]);
+
+    // async function setStorage() {
+    //     await AsyncStorage.setItem("prod", JSON.stringify(cart));
+    // }
+    // async function getStorage() {
+    //     var data = await AsyncStorage.getItem("prod");
+    //     setCart(JSON.parse(data));
+    // }
+    function removeFromCart(ind) {
+        //remove the item from my cart
+        setCart(
+            cart.filter(function (val, i) {
+                return ind != i;
+            })
+            );
+            //add the item to the store
+            // setProucts([...products,cart[ind]]);
     }
-    async function getStorage () {
-        var data = await AsyncStorage.getItem("prod");
-        setCart(JSON.parse(data));
-    }
-    useEffect(()=>{
-        getStorage();
-    },[cart]);
     return (
         <View>
-            <View>
+            <View style={styles.titv}>
                 <Text style={styles.tit}>My Cart</Text>
             </View>
             <FlatList
@@ -29,12 +43,12 @@ export default function Cart() {
                             source={{ uri: obj.item.image }} />
                     </View>
                     <View style={{ margin: 10 }}>
-                        <Text style={{ fontSize: 15, fontWeight: "bold" }}>{obj.item.category}</Text>
+                        <Text style={{ fontSize: 15, fontWeight: "bold" }}>{obj.item.title}</Text>
                     </View>
-                    <View style={{ flexDirection: "row", alignItems: 'center', justifyContent: "space-between", margin: 10 }}>
+                    <View style={{ flexDirection: "row", alignItems: 'center', justifyContent: "space-between", marginLeft: 10 }}>
                         <View>
-                            <Text>{obj.item.price}</Text>
-                            <Text>{obj.item.rating.rate}</Text>
+                            <Text>Price: {obj.item.price}</Text>
+                            <Text>Rate: {obj.item.rating.rate}</Text>
                         </View>
                         <View>
                             <TouchableOpacity onPress={() => removeFromCart(obj.index)}>
@@ -54,7 +68,7 @@ const styles = StyleSheet.create({
     card:
     {
         width: 175,
-        height: 200,
+        // height: 200,
         marginHorizontal: 10,
         marginBottom: 20,
         marginTop: 40,
@@ -76,7 +90,11 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         height: 35,
         color: "white",
-        paddingLeft: 120,
-        marginTop: 30,
+        paddingLeft: 20,
+    },
+    titv: {
+        alignItems: 'stretch',
+        justifyContent: 'center',
+        marginTop: 30
     }
 })
