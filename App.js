@@ -1,19 +1,17 @@
 import { StyleSheet } from 'react-native';
-import Product from './components/Product'
+import Home from "./components/Home";
+import Profile from './components/profile';
+import Signup from './components/Signup';
 import { NavigationContainer } from '@react-navigation/native';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import Cart from './components/Cart';
-import { Entypo } from '@expo/vector-icons';
-import { prodContext,cartContext } from './config/Contex';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { countContext } from './config/Contex';
 import { useState } from 'react';
-import axios from 'axios';
-
 export default function App() {
   // const [count,setCount] = useState(0);//number of items in the cart
-  const [cart,setCart] = useState([]);//items in the cart
   // const [products, setProucts] = useState([]);
+  const Stack = createNativeStackNavigator();
+  const [count, setCount] = useState(0);//items in the cart
 
-  const Tab = createBottomTabNavigator();
   // useEffect(() => {
   //   //it's async function so you have to use then or async and await
   //   axios.get("https://fakestoreapi.com/products").then((res) => {
@@ -22,35 +20,16 @@ export default function App() {
   //   })
   // }, []);//empty array means it won't be excuted on updating anything
   return (
-    
-    <cartContext.Provider value={{cart,setCart}}>
-      <NavigationContainer style={styles.container}>
-        <Tab.Navigator
-          screenOptions={({ route }) => ({//taking the route of
-            tabBarIcon:
-              ({ focused, size, color }) => {
-                //focued is a flag to know the screen is opened
-                //size is the size of the icon
-                //color is the color of the icon
-                var icon = '';//icon name in the library
-                //decide the size and the color depends 
-                size = focused ? 30 : 24;
-                color = focused ? "orange" : 'grey';
-                if (route.name == 'Products') {
-                  icon = 'shop';
-                }
-                else if (route.name == 'My Cart') {
-                  icon = 'shopping-cart';
-                }
-                return <Entypo name={icon} size={size} color={color} />;
-          }})}
-        >
-          {/* <Tab.Screen options={{ headerShown: false }} name='Count' component={Count}/> */}
-          <Tab.Screen options={{ headerShown: false }} name='Products' component={Product} />
-          <Tab.Screen options={{ headerShown: false ,tabBarBadge:cart.length}} name='My Cart' component={Cart} />
-        </Tab.Navigator>
+  <countContext.Provider value={{count,setCount}}>
+        <NavigationContainer style={styles.container}>
+        {/* <StatusBar style="auto" /> */}
+        <Stack.Navigator>
+          <Stack.Screen name='LogIn' component={Profile}></Stack.Screen>
+          <Stack.Screen name='SignUp' component={Signup}></Stack.Screen>
+          <Stack.Screen options={{ headerShown: false }} name='Home' component={Home}></Stack.Screen>
+        </Stack.Navigator>
       </NavigationContainer>
-    </cartContext.Provider>
+    </countContext.Provider>
   );
 }
 

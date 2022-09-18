@@ -1,5 +1,4 @@
 import { createContext } from "react";
 
-export const countContext=createContext();
-export const cartContext=createContext();
-export const prodContext=createContext();
+export const countContext=createContext(100);
+export const cartContext=createContext(1);
